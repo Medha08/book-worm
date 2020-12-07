@@ -1,18 +1,21 @@
 import mongoose from 'mongoose';
 
-//khud sai otherwise [{}]
-const orderItemSchema = mongoose.Schema({
-  name: { type: String, required: true },
-  qty: { type: Number, required: true },
-  image: { type: String, required: true },
-  price: { type: Number, required: true },
-  product: { type: mongoose.Types.ObjectId, required: true, ref: 'Product' },
-});
-
 const orderSchema = mongoose.Schema(
   {
     user: { type: mongoose.Types.ObjectId, required: true, ref: 'User' },
-    orderItems: [orderItemSchema],
+    orderItems: [
+      {
+        name: { type: String, required: true },
+        qty: { type: Number, required: true },
+        image: { type: String, required: true },
+        price: { type: Number, required: true },
+        productID: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: 'Product',
+        },
+      },
+    ],
     shippingAddress: {
       address: { type: String, required: true },
       city: { type: String, required: true },

@@ -15,10 +15,11 @@ const PaymentScreen = ({ history }) => {
     history.pushState('/shipping');
   }
 
-  const [paymentMethod, setPaymentMethod] = useState('Paypal');
+  const [paymentMethod, setPaymentMethod] = useState(cart.paymentMethod);
 
   const submitHandler = (e) => {
     e.preventDefault();
+
     dispatch(savePaymentMethod(paymentMethod));
     history.push('/placeOrder');
   };
@@ -38,7 +39,6 @@ const PaymentScreen = ({ history }) => {
               id='PayPal'
               name='paymentMethod'
               value='PayPal'
-              checked
               onChange={(e) => setPaymentMethod(e.target.value)}
             ></Form.Check>
             <Form.Check
@@ -47,7 +47,6 @@ const PaymentScreen = ({ history }) => {
               id='UPI'
               name='paymentMethod'
               value='UPI'
-              checked
               onChange={(e) => setPaymentMethod(e.target.value)}
             ></Form.Check>
           </Col>
