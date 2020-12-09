@@ -13,6 +13,18 @@ import {
   UPDATE_USER_DETAILS_REQUEST,
   UPDATE_USER_DETAILS_SUCCESS,
   UPDATE_USER_DETAILS_RESET,
+  USER_ORDERS_COLLECTION_FALIURE,
+  USER_ORDERS_COLLECTION_REQUEST,
+  USER_ORDERS_COLLECTION_SUCCESS,
+  USER_ORDERS_COLLECTION_RESET,
+  USER_DETAILS_RESET,
+  USERS_LIST_REQUEST,
+  USERS_LIST_SUCCESS,
+  USERS_LIST_FALIURE,
+  USERS_LIST_RESET,
+  USER_DELETE_FALIURE,
+  USER_DELETE_SUCCESS,
+  USER_DELETE_REQUEST,
 } from '../constants/userConstants';
 export const userLoginReducer = (state = {}, action) => {
   switch (action.type) {
@@ -56,6 +68,8 @@ export const userDetailsReducer = (state = { user: {} }, action) => {
       return { loading: false, user: action.payload };
     case GET_USER_DETAILS_FALIURE:
       return { loading: false, error: action.payload };
+    case USER_DETAILS_RESET:
+      return { user: {} };
     default:
       return state;
   }
@@ -70,6 +84,49 @@ export const userUpdateProfileReducer = (state = {}, action) => {
     case UPDATE_USER_DETAILS_FALIURE:
       return { loading: false, error: action.payload };
     case UPDATE_USER_DETAILS_RESET:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const userOrdersReducer = (state = { orders: [] }, action) => {
+  switch (action.type) {
+    case USER_ORDERS_COLLECTION_REQUEST:
+      return { ...state, loading: true };
+    case USER_ORDERS_COLLECTION_SUCCESS:
+      return { loading: false, orders: action.payload };
+    case USER_ORDERS_COLLECTION_FALIURE:
+      return { loading: false, error: action.payload };
+    case USER_ORDERS_COLLECTION_RESET:
+      return { orders: [] };
+    default:
+      return state;
+  }
+};
+
+export const usersListReducer = (state = { users: [] }, action) => {
+  switch (action.type) {
+    case USERS_LIST_REQUEST:
+      return { loading: true };
+    case USERS_LIST_SUCCESS:
+      return { loading: false, users: action.payload };
+    case USERS_LIST_FALIURE:
+      return { loading: false, error: action.payload };
+    case USERS_LIST_RESET:
+      return { users: [] };
+    default:
+      return state;
+  }
+};
+
+export const userDeleteReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_DELETE_REQUEST:
+      return { loading: true, success: false };
+    case USER_DELETE_SUCCESS:
+      return { loading: false, success: true };
+    case USER_DELETE_FALIURE:
       return { loading: false, error: action.payload };
     default:
       return state;

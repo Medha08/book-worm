@@ -12,6 +12,18 @@ import {
   UPDATE_USER_DETAILS_FALIURE,
   UPDATE_USER_DETAILS_REQUEST,
   UPDATE_USER_DETAILS_SUCCESS,
+  USER_ORDERS_COLLECTION_SUCCESS,
+  USER_ORDERS_COLLECTION_FALIURE,
+  USER_ORDERS_COLLECTION_REQUEST,
+  USER_DETAILS_RESET,
+  USER_ORDERS_COLLECTION_RESET,
+  USERS_LIST_FALIURE,
+  USERS_LIST_SUCCESS,
+  USERS_LIST_REQUEST,
+  USERS_LIST_RESET,
+  USER_DELETE_FALIURE,
+  USER_DELETE_SUCCESS,
+  USER_DELETE_REQUEST,
 } from '../constants/userConstants';
 import axios from 'axios';
 
@@ -49,6 +61,9 @@ export const login = (email, password) => async (dispatch) => {
 
 export const logout = () => (dispatch) => {
   localStorage.removeItem('userInfo');
+  dispatch({ type: USERS_LIST_RESET });
+  dispatch({ type: USER_ORDERS_COLLECTION_RESET });
+  dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: USER_LOGOUT });
 };
 
@@ -128,6 +143,89 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: UPDATE_USER_DETAILS_FALIURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getUserOrders = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_ORDERS_COLLECTION_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/orders/myorders`, config);
+    dispatch({ type: USER_ORDERS_COLLECTION_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_ORDERS_COLLECTION_FALIURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getUsersList = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USERS_LIST_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/users`, config);
+
+    dispatch({ type: USERS_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USERS_LIST_FALIURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const deleteUser = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_DELETE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    await axios.delete(`/api/users/${id}`, config);
+
+    dispatch({ type: USER_DELETE_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: USER_DELETE_FALIURE,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
