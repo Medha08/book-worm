@@ -5,6 +5,12 @@ import {
   PRODUCT_DETAILS_FALIURE,
   PRODUCT_DETAILS_REQ,
   PRODUCT_DETAILS_SUCCESS,
+  PRODUCT_DELETE_REQ,
+  PRODUCT_DELETE_SUCCESS,
+  PRODUCT_DELETE_FALIURE,
+  PRODUCT_CREATE_REQ,
+  PRODUCT_CREATE_SUCCESS,
+  PRODUCT_CREATE_FALIURE,
 } from '../constants/productConstants';
 
 import axios from 'axios';
@@ -37,6 +43,64 @@ export const getProductDetails = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: PRODUCT_DETAILS_FALIURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const deleteProductByID = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PRODUCT_DELETE_REQ });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.delete(`/api/products/${id}`, config);
+
+    dispatch({ type: PRODUCT_DELETE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_DELETE_FALIURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const createProduct = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PRODUCT_CREATE_REQ });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(`/api/products/`, {}, config);
+
+    dispatch({ type: PRODUCT_CREATE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_CREATE_FALIURE,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

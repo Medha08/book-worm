@@ -108,7 +108,7 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 // @desc DELETE TO DELETE a USER
-// @route DELETE /api/users
+// @route DELETE /api/users/:id
 // @access Private Admin
 const deleteUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
