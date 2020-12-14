@@ -96,6 +96,7 @@ const registerUser = asyncHandler(async (req, res) => {
         name: user.name,
         email: user.email,
         isAdmin: user.isAdmin,
+        token: generateToken(user._id),
       });
     } else {
       res.status(404);
